@@ -21,7 +21,8 @@ grant_permissions() {
 
 create_directory() {
   local directory=$1
-
+  echo Creating following directory
+  echo $directory
   # Check if the directory exists
   if [ -d "$directory" ]; then
     echo -e "\e[34mThe directory '$directory' already exists.\e[0m"  # Blue text

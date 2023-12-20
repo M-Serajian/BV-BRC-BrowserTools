@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 temp/
+Unique_Genome_IDs.txt

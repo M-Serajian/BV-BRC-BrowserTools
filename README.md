@@ -12,17 +12,6 @@ The Slurm-enabled version, **Slurm_FTP_downloader.sh**, generates Bash scripts c
 
 For users who prefer a single CPU approach, the **Single_CPU_FTP_downloader.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
 
-
-### Slurm_FTP_downloader.sh
-
-The Slurm-enabled version, **Slurm_FTP_downloader.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. The created script will be placed in the temporary repository and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments. If the `-l` flag is set to 1, log files will be stored in the temporary directory, providing a quick way to monitor the process.
-
-### Single_CPU_FTP_downloader.sh
-
-### Single_CPU_FTP_downloader.sh
-
-For users who prefer a single CPU approach, the **Single_CPU_FTP_downloader.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
-
 ## Usage
 
 ```bash

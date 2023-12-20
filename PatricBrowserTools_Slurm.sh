@@ -3,10 +3,9 @@ date;hostname
 echo "The directory in which Patric_genome_downloader was run is: "
 echo $(pwd)
 
-# This function will change the working 
-# directory to the directory in which 
-# Patric_genome_downloader project exists
-# to be sure utilities are loaded correctly!
+# This function will change the working directory to the directory in which 
+# Patric_genome_downloader project exists to be sure utilities are loaded correctly!
+
 aanpasbaar_runing() {
   local initial_working_directory=$1
   local Patric_genome_downloader_directory=$2
@@ -39,9 +38,6 @@ echo "the current working directory is :$current_directory"
 source $current_directory/utils/utils.sh
 
 # Processing arguments
-
-
-#!/bin/bash
 
 # Default values for optional arguments
 rwX_group_access=0
@@ -82,7 +78,7 @@ while [[ $# -gt 0 ]]; do
                     ;;
                 *)
                     echo -e "\e[31mError: Invalid FILE_TYPE (-f ).\e[0m"
-                    usage
+                    usage_slurm
                     ;;
             esac
             ;;
@@ -95,11 +91,11 @@ while [[ $# -gt 0 ]]; do
             Address_to_genome_id_text_file="$1"
             ;;
         -h|--help)
-            usage
+            usage_slurm
             ;;
         *)
             echo -e "\e[31mError: Unknown option $1\e[0m"
-            usage
+            usage_slurm
             ;;
     esac
     shift
@@ -108,7 +104,7 @@ done
 # Check for missing required arguments
 if [ -z "$File_type" ] || [ -z "$genome_saving_directory" ] || [ -z "$Address_to_genome_id_text_file" ]; then
     echo -e "\e[31mError: Required argument is missing!\e[0m"
-    usage
+    usage_slurm
 fi
 
 
@@ -154,11 +150,6 @@ echo "Number of genomes to be downloaded:" $Number_of_genomes
 
 create_directory ${genome_saving_directory}
 
-if [ "$rwX_group_access" -eq 1 ]; then
-
-    grant_permissions ${genome_saving_directory}
-
-fi
 
 cat << EOF > ${slurm_script_address}
 #!/bin/bash
@@ -229,12 +220,6 @@ echo Finished!!!
 
 EOF
 
-
-if [ "$rwX_group_access" -eq 1 ]; then
-
-    grant_permissions ${slurm_script_address}
-
-fi
 
 sbatch ${slurm_script_address}
 

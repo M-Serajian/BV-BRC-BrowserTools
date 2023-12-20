@@ -71,7 +71,7 @@ text_file_finder_and_sanity_checker_corrector() {
   fi
 }
 
-
+# Function to display usage for PatricBrowserTools slurm version
 File_type_usage (){
   echo "Valid FILE_TYPE options:"
   echo "  fna          FASTA contig sequences"
@@ -86,7 +86,30 @@ File_type_usage (){
 
 }
 
-# Function to display usage information
+# Function to display usage for single cpu PatricBrowserTools
+usage_slurm() {
+    echo "Usage: $0 -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]"
+    echo "Required arguments:"
+    echo "  -o, --genomes_saving_directory GENOME_DIRECTORY Specify the directory for saving genomes"
+    echo "  -i, --Address_to_genome_id_text_file FILE        Specify the text file containing genome IDs"
+    echo "  -f, --File_type FILE_TYPE                       Specify the file type"
+
+    File_type_usage   # File type usage
+
+    echo "Optional arguments:"
+    echo "  -rwXg               Enable group read and execute access (default: 0)"
+    echo "  -m, --memory VALUE  Set the memory limit (default: 10)"
+    echo "  -c, --cpus VALUE    Set the number of CPUs (default: 2)"
+    echo "  -t, --time_limit VALUE Set the time limit in hours (default: 20)"
+    echo "  -l, --logs          Enable debugging logs (default: 1)"
+    echo "  -h, --help          Display this help message"
+    echo ""
+
+
+    exit 1
+}
+
+
 usage() {
     echo "Usage: $0 -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]"
     echo "Required arguments:"

@@ -141,5 +141,5 @@ The primary information required to retrieve data from BV-BRC consists of genome
 
 ## Contributing
 
-Interested contributors are encouraged to follow the guidelines outlined in [CONTRIBUTING.md](#CONTRIBUTING.md) when participating in the development of this tool.
+Interested contributors are encouraged to follow the guidelines outlined in [CONTRIBUTING.md](https://github.com/M-Serajian/PatricBrowserTools/blob/main/CONTRIBUTING.md) when participating in the development of this tool.
 

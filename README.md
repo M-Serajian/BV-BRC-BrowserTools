@@ -1,6 +1,13 @@
 # PatricBrowserTools
 
-## Description
+## How to Cite
+
+If you use the you used this tool in your study, please cite our paper:
+
+- M.Serajian et al. "Title of Your Paper." Journal Name, 2024.
+  - [Link to Your Paper](link-to-your-paper)
+
+## Introduction
 The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the PATRIC database. The suite includes two main tools: **Slurm_FTP_downloader.sh** and **Single_CPU_FTP_downloader.sh**.
 
 ### PatricBrowserTools_Slurm.sh

@@ -20,7 +20,7 @@ In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieva
 
 ### PatricBrowserTools_Single_CPU.sh
 
-For users who prefer a single CPU approach, the **Single_CPU_FTP_downloader.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
+For users who prefer a single CPU approach, the **PatricBrowserTools_Single_CPU.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
 
 
 
@@ -84,12 +84,21 @@ Usage: sh Patric_genome_downloader/Slurm_FTP_downloader.sh -o GENOMES_SAVING_DIR
 - **-h, --help**: Display this help message
 
 
+### Installation
+
+No installation needed! It can be cloned, and it is ready to be used. 
+
+```bash
+sh Patric_genome_downloader/PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
+```
+
+
+
+
+
+
+
+
 ## Contributing
 
 Explain how others can contribute to your project. Include guidelines, code of conduct, etc.
-
-
-### Installation
-
-No installation needed! Just clone, and it is ready to be used. 
-

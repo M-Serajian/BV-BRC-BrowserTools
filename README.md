@@ -1,6 +1,32 @@
-# Project Name
+# PatricBrowserTools
 
-Brief description or introduction to your project.
+## Description
+
+The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the PATRIC database. The suite includes two main tools: **Slurm_FTP_downloader.sh** and **Single_CPU_FTP_downloader.sh**.
+
+### Slurm_FTP_downloader.sh
+
+The Slurm-enabled version, **Slurm_FTP_downloader.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. The created script will be placed in the temporary repository and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments. If the `-l` flag is set to 1, log files will be stored in the temporary directory, providing a quick way to monitor the process. Additionally, the software can disregard the data that is already retrieved. This feature is advantageous in case of errors during the process, allowing for a redo without starting the download from scratch.
+
+### Single_CPU_FTP_downloader.sh
+
+For users who prefer a single CPU approach, the **Single_CPU_FTP_downloader.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
+
+
+### Slurm_FTP_downloader.sh
+
+The Slurm-enabled version, **Slurm_FTP_downloader.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. The created script will be placed in the temporary repository and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments. If the `-l` flag is set to 1, log files will be stored in the temporary directory, providing a quick way to monitor the process.
+
+### Single_CPU_FTP_downloader.sh
+
+### Single_CPU_FTP_downloader.sh
+
+For users who prefer a single CPU approach, the **Single_CPU_FTP_downloader.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
+
+## Usage
+
+```bash
+sh Patric_genome_downloader/Slurm_FTP_downloader.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
 
 ## Table of Contents
 
@@ -19,7 +45,8 @@ Explain how to get started with your project. Provide steps to install, configur
 
 ### Prerequisites
 
-List any software or dependencies that need to be installed before running your project.
+No prerequisites! 
+
 
 ### Installation
 
@@ -31,7 +58,7 @@ Usage: sh Patric_genome_downloader/Slurm_FTP_downloader.sh -o GENOMES_SAVING_DIR
 
 ### Required arguments:
 
-- **-o, --genomes_saving_directory GENOME_DIRECTORY**: Specify the directory for saving genomes
+- **-o, --genomes_directory GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
 
 - **-i, --Address_to_genome_id_text_file FILE**: Specify the text file containing genome IDs
 

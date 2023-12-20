@@ -2,7 +2,6 @@
 
 date;hostname;pwd
 
-
 current_directory=$(pwd)
 chmod -R g+rwX ${current_directory}
 

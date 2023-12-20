@@ -150,3 +150,5 @@ The primary information required to retrieve data from BV-BRC consists of genome
 
 Interested contributors are encouraged to follow the guidelines outlined in [CONTRIBUTING.md](https://github.com/M-Serajian/PatricBrowserTools/blob/main/CONTRIBUTING.md) when participating in the development of this tool.
 
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

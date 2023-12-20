@@ -1,5 +1,7 @@
 # PatricBrowserTools
 
+## Description
+The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the PATRIC database. The suite includes two main tools: **Slurm_FTP_downloader.sh** and **Single_CPU_FTP_downloader.sh**.
 
 ## Table of Contents
 - [Getting Started](#getting-started)
@@ -11,9 +13,13 @@
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
-## Description
+## Getting Started 
 
-The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the PATRIC database. The suite includes two main tools: **Slurm_FTP_downloader.sh** and **Single_CPU_FTP_downloader.sh**.
+### Prerequisites
+There are no prerequisites needed!
+### Installation
+No installation is not needed! It can be cloned, and it is ready to be used. 
+
 
 ### PatricBrowserTools_Slurm.sh
 
@@ -82,10 +88,6 @@ Usage: sh Patric_genome_downloader/Slurm_FTP_downloader.sh -o GENOMES_SAVING_DIR
 
 - **-h, --help**: Display this help message
 
-
-### Installation
-
-No installation needed! It can be cloned, and it is ready to be used. 
 
 ```bash
 sh PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]

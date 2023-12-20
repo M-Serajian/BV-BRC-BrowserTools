@@ -13,6 +13,7 @@ The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facil
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
+
 ## Getting Started 
 ```
 git clone https://github.com/M-Serajian/PatricBrowserTools.git

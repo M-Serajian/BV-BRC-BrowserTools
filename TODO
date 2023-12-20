@@ -1,0 +1,3 @@
+-> make separate usage function for slurm and 1 cpu
+-> move the arg parser to utilities
+-> for arg parser create a very new bash script and add it to the 2 slurm of 1 cpu wrappers

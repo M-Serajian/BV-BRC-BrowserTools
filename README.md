@@ -134,7 +134,12 @@ sh PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GE
 
 - **-h, --help**: Display this help message
 
+## Configuration
+The primary information required to retrieve data from BV-BRC consists of genome IDs associated with various BACTERIAL AND VIRAL metadata, available at https://www.bv-brc.org/. Extract the desired genome IDs and store them in a text file. This software is not sensitive to white vertical spaces between two consecutive genome IDs; it automatically removes such spaces from the text file and saves the cleaned information in the same file containing genome IDs. Subsequently, the tool initiates the download process.
+
+
 
 ## Contributing
 
-Explain how others can contribute to your project. Include guidelines, code of conduct, etc.
+Interested contributors are encouraged to follow the guidelines outlined in CONTRIBUTING.md when participating in the development of this tool.
+

@@ -91,5 +91,5 @@ Explain how others can contribute to your project. Include guidelines, code of c
 
 ### Installation
 
-No installation needed. 
+No installation needed! Just clone, and it is ready to be used. 
 

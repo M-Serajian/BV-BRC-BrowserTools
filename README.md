@@ -18,6 +18,8 @@ For users who prefer a single CPU approach, the **PatricBrowserTools_Single_CPU.
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+  - [PatricBrowserTools_Slurm](#PatricBrowserTools_Slurm)
+  - [PatricBrowserTools_Single_CPU](#PatricBrowserTools_Single_CPU)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -33,9 +35,9 @@ There are no prerequisites needed!
 ### Installation
 No installation is not needed! It can be cloned, and it is ready to be used. 
 
+## Usage
+### PatricBrowserTools_Slurm Usage
 
-## PatricBrowserTools_Slurm Usage
-### 
 
 ```bash
 sh PatricBrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
@@ -94,7 +96,7 @@ In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieva
 
 
 
-## PatricBrowserTools_Single_CPU Usage
+### PatricBrowserTools_Single_CPU Usage
 
 ```bash
 sh PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]

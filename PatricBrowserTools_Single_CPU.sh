@@ -38,13 +38,12 @@ echo "the current working directory is :$current_directory"
 #loading utilities and usage functions 
 source $current_directory/utils/utils.sh
 
-# Processing arguments
-
+temporary_directory=${current_directory}"/temp"
+create_directory $temporary_directory
 
 #!/bin/bash
 
 # Default values for optional arguments
-rwX_group_access=0
 cpus=1
 
 # Parse command-line options
@@ -93,15 +92,31 @@ number_of_accessible_CPUs=${cpus}
 
 # +-------------------------- main code ---------------------------+
 # loading the utilities
-source ${Patric_genome_downloader_DIR}/utils/utils.sh 
+source ${current_directory}/utils/utils.sh 
 
 
 text_file_finder_and_sanity_checker_corrector $Address_to_genome_id_text_file
+# Creating a copy of the textfile to keep track of the genomes that could not be downloaded. 
+# textfile_input=$Address_to_genome_id_text_file  # Replace with your actual file path
+# suffix="${original_file##*.}"  # Extract suffix
+# base_name="${original_file%.*}"  # Extract base name
+
+# copy_file="${base_name}_remaining.txt"
+
+# # Create a copy of the genome list ID to keep track of the remaining genome
+# cp "$textfile_input" "$copy_file"
+
+
 
 Number_of_genomes=$(awk 'END{print NR}' "$Address_to_genome_id_text_file")
 echo "Number of genomes to be downloaded:" $Number_of_genomes
 
 create_directory ${genome_saving_directory}
+
+
+temporary_downloaded_files_list=$temporary_directory"/finished_list"_\${RUN}.txt
+temporary_failed_files_list=$temporary_directory"/failed_list"_\${RUN}.txt
+
 
 INPUT_LIST=${Address_to_genome_id_text_file}
 

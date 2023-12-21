@@ -97,7 +97,6 @@ usage_slurm() {
     File_type_usage   # File type usage
 
     echo "Optional arguments:"
-    echo "  -rwXg               Enable group read and execute access (default: 0)"
     echo "  -m, --memory VALUE  Set the memory limit (default: 10)"
     echo "  -c, --cpus VALUE    Set the number of CPUs (default: 2)"
     echo "  -t, --time_limit VALUE Set the time limit in hours (default: 20)"
@@ -120,7 +119,6 @@ usage() {
     File_type_usage   # File type usage
 
     echo "Optional arguments:"
-    echo "  -rwXg               Enable group read and execute access (default: 0)"
     echo "  -m, --memory VALUE  Set the memory limit (default: 10)"
     echo "  -c, --cpus VALUE    Set the number of CPUs (default: 2)"
     echo "  -t, --time_limit VALUE Set the time limit in hours (default: 20)"
@@ -131,3 +129,28 @@ usage() {
 
     exit 1
 }
+
+
+
+
+remove_downloaded_genomes_form_input_text() {
+    local input_file="$1"
+    local string_to_remove="$2"
+
+    # Check if the input file exists
+    if [ ! -f "$input_file" ]; then
+        echo "Error: Input file '$input_file' not found."
+        return 1
+    fi
+
+    # Use a background process to manage the lock without creating a lock file
+    {
+        flock -x 9
+
+        # Use sed to remove lines containing the specified string in place
+        sed -i "/$string_to_remove/d" "$input_file"
+    } 9<>"$input_file"
+
+    # No need to release the lock or close file descriptor; it's done automatically
+}
+

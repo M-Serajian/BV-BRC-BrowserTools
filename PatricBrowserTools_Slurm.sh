@@ -3,6 +3,7 @@ date;hostname
 echo "The directory in which Patric_genome_downloader was run is: "
 echo $(pwd)
 
+
 # This function will change the working directory to the directory in which 
 # Patric_genome_downloader project exists to be sure utilities are loaded correctly!
 
@@ -40,7 +41,6 @@ source $current_directory/utils/utils.sh
 # Processing arguments
 
 # Default values for optional arguments
-rwX_group_access=0
 memory=10
 cpus=2
 time_limit=20
@@ -50,10 +50,6 @@ logs=0
 # Parse command-line options
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        -rwXg)
-            shift
-            rwX_group_access="$1"
-            ;;
         -m|--memory)
             shift
             memory="$1"
@@ -109,14 +105,13 @@ fi
 
 
 Needed_memory="$memory"gb
-number_of_accessible_CPUs=${cpus}
 Process_time=$time_limit:00:00
 
 # Slrum specifications
 Main_job_action_name="DV_BRC_genome_downloader"
 log_files_address=${current_directory}"/temp/logs_"${Main_job_action_name}
 slurm_script_address=${current_directory}/temp/${Main_job_action_name}.sh
-Array_job_list=1-${number_of_accessible_CPUs} 
+Array_job_list=1-${cpus} 
 
 
 # +-------------------------- main code ---------------------------+
@@ -124,19 +119,12 @@ Array_job_list=1-${number_of_accessible_CPUs}
 source ${Patric_genome_downloader_DIR}/utils/utils.sh 
 
 # Creating temporaty directory
-create_directory ${current_directory}"/temp"
+temporary_directory=${current_directory}"/temp"
+create_directory $temporary_directory
 
 # Creating log directory for the debug 
 if [ $logs -eq 1 ]; then
     create_directory ${log_files_address}
-    grant_permissions ${log_files_address}
-fi
-
-# # Checking group flag
-if [ "$rwX_group_access" -eq 1 ]; then
-
-    grant_permissions ${current_directory}
-
 fi
 
 # #This part creates .sh file optimized based 
@@ -144,6 +132,17 @@ fi
 
 # reading the textfile containing the genome IDs
 text_file_finder_and_sanity_checker_corrector $Address_to_genome_id_text_file
+
+
+
+# Creating a copy of the textfile to keep track of the genomes that could not be downloaded.  ==> changed the algorithm and moved to the end
+# suffix="${Address_to_genome_id_text_file##*.}"  # Extract suffix
+# base_name="${Address_to_genome_id_text_file%.*}"  # Extract base name
+# remaining_genomes="${base_name}_remaining.txt"
+
+# # Create a copy of the genome list ID to keep track of the remaining genome
+# cp "$Address_to_genome_id_text_file" "$remaining_genomes"
+
 
 Number_of_genomes=$(awk 'END{print NR}' "$Address_to_genome_id_text_file")
 echo "Number of genomes to be downloaded:" $Number_of_genomes
@@ -163,8 +162,11 @@ cat << EOF > ${slurm_script_address}
 #SBATCH --output=${log_files_address}/"$Main_job_action_name"_%A_%a.log
 
 
+#Job array Id
 RUN=\${SLURM_ARRAY_TASK_ID:-1}
 
+temporary_downloaded_files_list=$temporary_directory"/finished_list"_\${RUN}.txt
+temporary_failed_files_list=$temporary_directory"/failed_list"_\${RUN}.txt
 echo "RUN #\${RUN}"
 
 INPUT_LIST=${Address_to_genome_id_text_file}
@@ -172,7 +174,7 @@ INPUT_LIST=${Address_to_genome_id_text_file}
 Number_of_genomes=\$(wc -l < "\$INPUT_LIST")
 
 # Calculate the number of lines each CPU should process (ceiling)
-lines_per_cpu=$(awk -v total="$Number_of_genomes" -v cpus="$number_of_accessible_CPUs" 'BEGIN { print int((total + cpus - 1) / cpus) }')
+lines_per_cpu=$(awk -v total="$Number_of_genomes" -v cpus="$cpus" 'BEGIN { print int((total + cpus - 1) / cpus) }')
 echo \$lines_per_cpu is allocated to each CPU
 
 
@@ -204,19 +206,37 @@ for ((line_num = \$start_line; line_num <= \$end_line; line_num++)); do
         if wget -qN -P "${genome_saving_directory}" "ftp://ftp.bvbrc.org/genomes/\${INPUT_FILE}/\${INPUT_FILE}.$File_type"; then
         # Command was successful
             echo -e "\e[32m\${INPUT_FILE}.$File_type successfuly downloaded!!!!!!!\e[0m"  # Green text
-        else
-            # Command failed
+            echo \${INPUT_FILE} >> \$temporary_downloaded_files_list
+            
+        else 
+            # download failed
             echo -e "\e[31m\${INPUT_FILE}.$File_type failed to be downloaded!!!!!!\e[0m"  # Red text
+            echo \${INPUT_FILE} >> \$temporary_failed_files_list
         fi
 
-    else # starting to download the genome
+    else # it is already downloaded
         echo "\${INPUT_FILE}.$File_type is already downloaded exists in the dataset directory!"
+        echo \${INPUT_FILE} >> \$temporary_downloaded_files_list
     fi  
 
 done
 
 echo The batch of .$File_type files in $Address_to_genome_id_text_file text file are downloaded!
-echo Finished!!!
+
+wait
+
+for i in {1..$cpus}; do
+    cat "$temporary_directory/finished_list_\${i}.txt" >> Downloaded_genomes.txt
+done
+
+rm $temporary_directory/finished_list_*
+
+
+for i in {1..$cpus}; do
+    cat "$temporary_directory/failed_list_\${i}.txt" >> Remained_genomes.txt
+done
+
+rm $temporary_directory/failed_list_*
 
 EOF
 

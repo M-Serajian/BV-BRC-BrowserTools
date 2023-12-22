@@ -35,73 +35,33 @@ current_directory=$(pwd)
 echo "the current working directory is :$current_directory"
 #Processing args
 
-#loading utilities and usage functions 
-source $current_directory/utils/utils.sh
+
+#loading utilities and used libraries 
+source $current_directory/utils/directory_managment.sh 
+source $current_directory/utils/regex.sh 
+source $current_directory/utils/grant_permissions_directories.sh 
+source $current_directory/utils/text_processor.sh
+
 
 # Processing arguments
-
 # Default values for optional arguments
 memory=10
 cpus=2
 time_limit=20
 logs=0
 
-
 # Parse command-line options
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -m|--memory)
-            shift
-            memory="$1"
-            ;;
-        -c|--cpus)
-            shift
-            cpus="$1"
-            ;;
-        -t|--time_limit)
-            shift
-            time_limit="$1"
-            ;;
-        -l|--logs)
-            shift
-            logs="$1"
-            ;;
-        -f|--File_type)
-            shift
-            case "$1" in
-                fna|faa|features.tab|ffn|frn|gff|pathway.tab|spgene.tab|subsystem.tab)
-                    File_type="$1"
-                    ;;
-                *)
-                    echo -e "\e[31mError: Invalid FILE_TYPE (-f ).\e[0m"
-                    usage_slurm
-                    ;;
-            esac
-            ;;
-        -o|--genomes_saving_directory)
-            shift
-            genome_saving_directory="$1"
-            ;;
-        -i|--Address_to_genome_id_text_file)
-            shift
-            Address_to_genome_id_text_file="$1"
-            ;;
-        -h|--help)
-            usage_slurm
-            ;;
-        *)
-            echo -e "\e[31mError: Unknown option $1\e[0m"
-            usage_slurm
-            ;;
-    esac
-    shift
-done
+parse_inputs_PBT_Slurm "$@"
 
-# Check for missing required arguments
-if [ -z "$File_type" ] || [ -z "$genome_saving_directory" ] || [ -z "$Address_to_genome_id_text_file" ]; then
-    echo -e "\e[31mError: Required argument is missing!\e[0m"
-    usage_slurm
-fi
+echo "memory: $memory"
+echo "cpus: $cpus"
+echo "time_limit: $time_limit"
+echo "logs: $logs"
+echo "File_type: $File_type"
+echo "genome_saving_directory: $genome_saving_directory"
+echo "Address_to_genome_id_text_file: $Address_to_genome_id_text_file"
+echo "report: $( [ "$report" -eq 1 ] && echo "Yes!" || echo "No!" )"
+
 
 
 Needed_memory="$memory"gb
@@ -115,12 +75,14 @@ Array_job_list=1-${cpus}
 
 
 # +-------------------------- main code ---------------------------+
-# loading the utilities
-source ${Patric_genome_downloader_DIR}/utils/utils.sh 
 
 # Creating temporaty directory
 temporary_directory=${current_directory}"/temp"
 create_directory $temporary_directory
+
+
+# removing the temporary files except log files to prevent any problem in the list of remaining and downloaded files generated at the end!
+#rm -f "${temporary_directory}"/*
 
 # Creating log directory for the debug 
 if [ $logs -eq 1 ]; then
@@ -150,6 +112,15 @@ echo "Number of genomes to be downloaded:" $Number_of_genomes
 create_directory ${genome_saving_directory}
 
 
+if [ $report -eq 1 ]; then
+    Address_Downloaded_genomes_file=$current_directory/Downloaded_genomes.csv
+    Address_Failed_genomes=$current_directory/Failed_genomes.csv
+    # Creating these text files or making them empty
+    echo "Genome ID" > $Address_Downloaded_genomes_file
+    echo "Genome ID" > $Address_Failed_genomes
+fi
+
+
 cat << EOF > ${slurm_script_address}
 #!/bin/bash
 #SBATCH --job-name=${Main_job_action_name}
@@ -165,8 +136,10 @@ cat << EOF > ${slurm_script_address}
 #Job array Id
 RUN=\${SLURM_ARRAY_TASK_ID:-1}
 
-temporary_downloaded_files_list=$temporary_directory"/finished_list"_\${RUN}.txt
-temporary_failed_files_list=$temporary_directory"/failed_list"_\${RUN}.txt
+
+# No temporary files are needed 
+# temporary_downloaded_files_list=$temporary_directory"/finished_list"_\${RUN}.txt
+# temporary_failed_files_list=$temporary_directory"/failed_list"_\${RUN}.txt
 echo "RUN #\${RUN}"
 
 INPUT_LIST=${Address_to_genome_id_text_file}
@@ -177,7 +150,9 @@ Number_of_genomes=\$(wc -l < "\$INPUT_LIST")
 lines_per_cpu=$(awk -v total="$Number_of_genomes" -v cpus="$cpus" 'BEGIN { print int((total + cpus - 1) / cpus) }')
 echo \$lines_per_cpu is allocated to each CPU
 
-
+# 2 arrays to keep track of downloaded and faild to be downloaded genomes
+Downloaded_genomes=()
+Failed_to_be_downloaded_genomes=()
 
 # Calculate the start and end lines for the current job
 start_line=\$(((SLURM_ARRAY_TASK_ID - 1) * lines_per_cpu + 1))
@@ -206,42 +181,61 @@ for ((line_num = \$start_line; line_num <= \$end_line; line_num++)); do
         if wget -qN -P "${genome_saving_directory}" "ftp://ftp.bvbrc.org/genomes/\${INPUT_FILE}/\${INPUT_FILE}.$File_type"; then
         # Command was successful
             echo -e "\e[32m\${INPUT_FILE}.$File_type successfuly downloaded!!!!!!!\e[0m"  # Green text
-            echo \${INPUT_FILE} >> \$temporary_downloaded_files_list
-            
+            #echo \${INPUT_FILE} > \$temporary_downloaded_files_list # No temporary files any more needed
+            Downloaded_genomes+=(\${INPUT_FILE})
         else 
             # download failed
             echo -e "\e[31m\${INPUT_FILE}.$File_type failed to be downloaded!!!!!!\e[0m"  # Red text
-            echo \${INPUT_FILE} >> \$temporary_failed_files_list
+            # echo \${INPUT_FILE} > \$temporary_failed_files_list # No temporary files used
+            Failed_to_be_downloaded_genomes+=(\${INPUT_FILE})
         fi
 
     else # it is already downloaded
         echo "\${INPUT_FILE}.$File_type is already downloaded exists in the dataset directory!"
-        echo \${INPUT_FILE} >> \$temporary_downloaded_files_list
+        #echo \${INPUT_FILE} >> \$temporary_downloaded_files_list # No temporary files used
+        Downloaded_genomes+=(\${INPUT_FILE}) 
     fi  
 
 done
 
+
+
+
 echo The batch of .$File_type files in $Address_to_genome_id_text_file text file are downloaded!
 
-wait
-
-for i in {1..$cpus}; do
-    cat "$temporary_directory/finished_list_\${i}.txt" >> Downloaded_genomes.txt
-done
-
-rm $temporary_directory/finished_list_*
 
 
-for i in {1..$cpus}; do
-    cat "$temporary_directory/failed_list_\${i}.txt" >> Remained_genomes.txt
-done
+if [ $report -eq 1 ]; then
+{
+    {
+        flock -x 200
 
-rm $temporary_directory/failed_list_*
+        # Write each element of the array to the file
+        for genome in "\${Downloaded_genomes[@]}"; do
+            echo "\$genome" >> $Address_Downloaded_genomes_file
+        done
+
+    } 200>>"$Address_Downloaded_genomes_file"  # Use file descriptor 200 to acquire the lock
+    {
+        flock -x 200
+
+        # Write each element of the array to the file
+        for genome in "\${Failed_to_be_downloaded_genomes[@]}"; do
+            echo "\$genome" >> $Address_Failed_genomes
+        done
+
+    } 200>>"$Address_Failed_genomes"  # Use file descriptor 200 to acquire the lock
+
+    echo -e "\e[32mReports are available at $Address_Downloaded_genomes_file and $Address_Failed_genomes\e[0m"  # Green text
+    echo -e "\e[35mFeel free to repeat the same command used in case downloaded the rest of genomes that could not be downloaded, the previously downloaded data wont be redownloaded and the input textfile wolud not needed to be changed!\e[0m"  # Green text  
+}
+fi
+
 
 EOF
-
 
 sbatch ${slurm_script_address}
 
 echo ${Main_job_action_name} is submitted!
+echo The downloaded genomes will be available at $Address_to_genome_id_text_file
 

@@ -107,9 +107,9 @@ sh PatricBrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt
 Here, PatricBrowserTools will initiate a Slurm job array, in the "temp" directory, specifying the allocation of 2 CPUs as the default configuration. The job's objective is to retrieve genomic data from a list specified in the "Genome_IDs.txt" file. The computational workload is parallelized, with the first CPU tasked to download the initial portion of genomic data, while the second CPU concurrently retrieves the remaining half of the data. 
 
 ```bash
-sh PatricBrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt  -c 90 -m 8 -l 1
+sh PatricBrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt  -c 90 -m 8 -l -report
 ```
-In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieval task, and log files are stored in the "log" directory within the "temp" directory. 
+In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieval task, and log files are stored in the "log" directory within the "temp" directory. 2 CSV files will be created in the main directory of PatricBrowserTools to report the downloaded genomes and the ones that failed. 
 
 
 

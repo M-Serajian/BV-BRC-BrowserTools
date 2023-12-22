@@ -56,7 +56,7 @@ parse_inputs_PBT_single_CPU() {
                 shift
                 Address_to_genome_id_text_file="$1"
                 ;;
-            -report)
+            -report|--report)
                 # If -report is provided, run command_Y and exit
                 report=1
                 shift
@@ -147,7 +147,7 @@ parse_inputs_PBT_Slurm() {
                 shift
                 Address_to_genome_id_text_file="$1"
                 ;;
-            -report)
+            -report|--report)
                 # If -report is provided, run command_Y and exit
                 report=1
                 shift

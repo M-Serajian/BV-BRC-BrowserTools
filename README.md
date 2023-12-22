@@ -51,7 +51,7 @@ sh PatricBrowserTools_Slurm.sh <code style="color : name_color">-o</code>  GENOM
 ```
 ### Required arguments:
 
-- **`-o`, --`genomes_directory` GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
+- **`-o`, `--genomes_directory` GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
 
 - **`-i`, `--Address_to_genome_id_text_file` FILE**: Specify the text file containing genome IDs
 
@@ -110,11 +110,11 @@ sh PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GE
 
 ### Required arguments:
 
-- **`-o`, --genomes_directory GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
+- **`-o`, `--genomes_directory` GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
 
-- **`-i`, --Address_to_genome_id_text_file FILE**: Specify the text file containing genome IDs
+- **`-i`, `--Address_to_genome_id_text_file` FILE**: Specify the text file containing genome IDs
 
-- **`-f`, --File_type FILE_TYPE**: Specify the file type
+- **`-f`, `--File_type FILE_TYPE`**: Specify the file type
 
 ### Valid FILE_TYPE options:
 

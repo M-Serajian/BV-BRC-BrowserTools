@@ -12,7 +12,16 @@ The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facil
 
 ### PatricBrowserTools_Slurm.sh
 
-The Slurm-enabled version, **PatricBrowserTools_Slurm.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. The created script will be placed in the temporary repository, "temp" and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments. If the `-l` flag is set to 1, log files will be stored in the "temp", providing a quick way to monitor the process. Additionally, the software can disregard the data that is already retrieved. This feature is advantageous in case of errors during the process, allowing for a redo without starting the download from scratch.
+The Slurm-enabled version, **PatricBrowserTools_Slurm.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. 
+
+The created script will be placed in the temporary repository, "temp" and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments.
+
+If the `-l` flag is included in the inputs, log files will be stored in the "temp" directory, providing a quick way to monitor the process. 
+
+If the `-report` flag is included in the inputs, two CSV files will be generated. One CSV file will contain the list of successfully downloaded genomes, and the other will list the genomes that failed to download.
+
+
+Additionally, the software can disregard the data that is already retrieved. This feature is advantageous in case of errors during the process, allowing for a redo without starting the download from scratch.
 
 ### PatricBrowserTools_Single_CPU.sh
 
@@ -84,7 +93,9 @@ sh PatricBrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_
 
 - **`-t`, `--time_limit` VALUE**: Set the time limit in hours (default: 20)
 
-- **`-l`, `--logs`**: Enable debugging logs (default: 1)
+- **`-l`, `--logs`**: Enable debugging logs
+
+- **`-report`, `--report`**: Create CSV files of downloaded and failed to be downloaded genomes
 
 - **`-h`, `--help`**: Display this help message
 
@@ -137,6 +148,7 @@ sh PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GE
 - **subsystem.tab**: Subsystem assignments in tab-delimited format
 
 ### Optional arguments:
+- **`-report`, `--report`**: Create CSV files of downloaded and failed to be downloaded genomes
 
 - **`-h`, `--help`**: Display this help message
 

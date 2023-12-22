@@ -26,7 +26,7 @@ Additionally, the software can disregard the data that is already retrieved. Thi
 ### PatricBrowserTools_Single_CPU.sh
 
 For users who prefer a single CPU approach, the **PatricBrowserTools_Single_CPU.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
-Moreover, **`-report`** works the same for PatricBrowserTools_Single_CPU. 
+Moreover, **`-report`** works the same for PatricBrowserTools_Single_CPU; however, it does not have **`-l`** since it is single CPU and the process can be tracked directly on termial.
 
 
 ## Table of Contents

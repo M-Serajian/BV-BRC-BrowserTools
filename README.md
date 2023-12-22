@@ -47,11 +47,14 @@ No installation is not needed! It can be cloned, and it is ready to be used.
 
 
 ```bash
-sh PatricBrowserTools_Slurm.sh <code style="color : name_color">-o</code>  GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
+<p align="center">
+  <b style="color:blue;">Usage:</b><br>
+  <code>sh PatricBrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]</code>
+</p>
 
 
 ```
-sh PatricBrowserTools_Slurm.sh <code style="color : name_color">-o</code>  GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
+
 
 ### Required arguments:
 

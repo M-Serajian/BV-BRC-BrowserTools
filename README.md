@@ -8,7 +8,7 @@ If you use the you used this tool in your study, please cite our paper:
   - [Link to Your Paper](link-to-your-paper)
 
 ## Introduction
-The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the PATRIC database. The suite includes two main tools: **Slurm_FTP_downloader.sh** and **Single_CPU_FTP_downloader.sh**.
+The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the PATRIC database. The primary advantage of PatricBrowserTools is  its ability to seamlessly resume processing at any point within the workflow. In the event of an interruption, the tool, when rerun without alterations to the genome list—provided they remain valid according to BV-BRC—picks up precisely where it left off. Furthermore, the tool streamlines data processing efficiency by generating a comprehensive CSV report. The suite includes two main tools: **Slurm_FTP_downloader.sh** and **Single_CPU_FTP_downloader.sh**.
 
 ### PatricBrowserTools_Slurm.sh
 
@@ -153,7 +153,7 @@ sh PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GE
 - **`-h`, `--help`**: Display this help message
 
 ## Configuration
-The primary information required to retrieve data from BV-BRC consists of genome IDs associated with various BACTERIAL AND VIRAL metadata, available at https://www.bv-brc.org/. Extract the desired genome IDs and store them in a text file. This software is not sensitive to white vertical spaces between two consecutive genome IDs; it automatically removes such spaces from the text file and saves the cleaned information in the same file containing genome IDs. Subsequently, the tool initiates the download process.
+The primary information required to retrieve data from BV-BRC consists of genome IDs associated with various BACTERIAL AND VIRAL metadata, available at (BV-BRC)[https://www.bv-brc.org/]. Extract the desired genome IDs and store them in a text file. This software is not sensitive to white vertical spaces between two consecutive genome IDs; it automatically removes such spaces from the text file and saves the cleaned information in the same file containing genome IDs. Subsequently, the tool initiates the download process.
 
 
 

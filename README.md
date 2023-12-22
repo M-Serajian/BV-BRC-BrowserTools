@@ -16,9 +16,9 @@ The Slurm-enabled version, **PatricBrowserTools_Slurm.sh**, generates Bash scrip
 
 The created script will be placed in the temporary repository, "temp" and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments.
 
-If the `-l` flag is included in the inputs, log files will be stored in the "temp" directory, providing a quick way to monitor the process. 
+If the **`-l`** flag is included in the inputs, log files will be stored in the "temp" directory, providing a quick way to monitor the process. 
 
-If the `-report` flag is included in the inputs, two CSV files will be generated. One CSV file will contain the list of successfully downloaded genomes, and the other will list the genomes that failed to download.
+If the **`-report`** flag is included in the inputs, two CSV files will be generated. One CSV file will contain the list of successfully downloaded genomes, and the other will list the genomes that failed to download.
 
 
 Additionally, the software can disregard the data that is already retrieved. This feature is advantageous in case of errors during the process, allowing for a redo without starting the download from scratch.
@@ -26,7 +26,7 @@ Additionally, the software can disregard the data that is already retrieved. Thi
 ### PatricBrowserTools_Single_CPU.sh
 
 For users who prefer a single CPU approach, the **PatricBrowserTools_Single_CPU.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
-
+Moreover, **`-report`** works the same for PatricBrowserTools_Single_CPU. 
 
 
 ## Table of Contents

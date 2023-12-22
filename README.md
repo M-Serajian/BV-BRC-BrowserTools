@@ -51,11 +51,11 @@ sh PatricBrowserTools_Slurm.sh <code style="color : name_color">-o</code>  GENOM
 ```
 ### Required arguments:
 
-- **`-o`, --genomes_directory GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
+- **`-o`, --`genomes_directory` GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
 
-- **-i, --Address_to_genome_id_text_file FILE**: Specify the text file containing genome IDs
+- **-`i`, --`Address_to_genome_id_text_file` FILE**: Specify the text file containing genome IDs
 
-- **-f, --File_type FILE_TYPE**: Specify the file type
+- **-`f`, --`File_type` FILE_TYPE**: Specify the file type
 
 ### Valid FILE_TYPE options:
 
@@ -78,15 +78,15 @@ sh PatricBrowserTools_Slurm.sh <code style="color : name_color">-o</code>  GENOM
 - **subsystem.tab**: Subsystem assignments in tab-delimited format
 
 ### Optional arguments:
-- **-m, --memory VALUE**: Set the memory limit (default: 10)
+- **-`m`, --`memory` VALUE**: Set the memory limit (default: 10)
 
-- **-c, --cpus VALUE**: Set the number of CPUs (default: 2)
+- **-`c`, --`cpus` VALUE**: Set the number of CPUs (default: 2)
 
-- **-t, --time_limit VALUE**: Set the time limit in hours (default: 20)
+- **-`t`, --`time_limit` VALUE**: Set the time limit in hours (default: 20)
 
-- **-l, --logs**: Enable debugging logs (default: 1)
+- **-`l`, --`logs`**: Enable debugging logs (default: 1)
 
-- **-h, --help**: Display this help message
+- **-`h`, --`help`**: Display this help message
 
 ### Examples
 

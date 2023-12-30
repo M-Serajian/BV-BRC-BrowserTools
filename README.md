@@ -1,5 +1,11 @@
 # PatricBrowserTools
 
+<div style="display: flex; align-items: center;">
+  <div style="flex: 1;">
+    <img src="https://github.com/M-Serajian/PatricBrowserTools/blob/main/images/logo_patric.png" alt="MTB++ Image" style="width: 100%;">
+  </div>
+</div>
+
 ## How to Cite
 
 If you use the you used this tool in your study, please cite our paper:

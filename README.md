@@ -48,7 +48,7 @@ Moreover, **`-report`** works the same for BV-BRC-BrowserTools_Single_CPU; howev
 git clone https://github.com/M-Serajian/BV-BRC-BrowserTools.git
 ```
 ### Prerequisites
-There are no prerequisites needed!
+[Wget](https://www.gnu.org/software/wget/)
 ### Installation
 No installation is not needed! It can be cloned, and it is ready to be used. 
 

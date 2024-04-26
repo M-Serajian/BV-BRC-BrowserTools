@@ -1,8 +1,8 @@
-# PatricBrowserTools
+# BV-BRC-BrowserTools
 
 <div style="display: flex; align-items: center;">
   <div style="flex: 1;">
-    <img src="https://github.com/M-Serajian/PatricBrowserTools/blob/main/images/logo_patric_white_space.png" alt="MTB++ Image" style="width: 100%;">
+    <img src="https://github.com/M-Serajian/BV-BRC-BrowserTools/blob/main/images/logo_patric_white_space.png" alt="MTB++ Image" style="width: 100%;">
   </div>
 </div>
 
@@ -14,11 +14,11 @@ If you use the you used this tool in your study, please cite our paper:
   - [Link to Your Paper](link-to-your-paper)
 
 ## Introduction
-The **PatricBrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the PATRIC database. The primary advantage of PatricBrowserTools is  its ability to seamlessly resume processing at any point within the workflow. In the event of an interruption, the tool, when rerun without alterations to the genome list—provided they remain valid according to [BV-BRC](https://www.bv-brc.org/)— picks up precisely where it left off. Furthermore, the tool streamlines data processing efficiency by generating a comprehensive CSV report. The suite includes two main tools: **Slurm_FTP_downloader.sh** and **Single_CPU_FTP_downloader.sh**.
+The **BV-BRC-BrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the BV-BRC database. The primary advantage of BV-BRC-BrowserTools is  its ability to seamlessly resume processing at any point within the workflow. In the event of an interruption, the tool, when rerun without alterations to the genome list—provided they remain valid according to [BV-BRC](https://www.bv-brc.org/)— picks up precisely where it left off. Furthermore, the tool streamlines data processing efficiency by generating a comprehensive CSV report. The suite includes two main tools: **BV-BRC-BrowserTools_Slurm.sh** and **BV-BRC-BrowserTools_Single_CPU.sh**.
 
-### PatricBrowserTools_Slurm.sh
+### BV-BRC-BrowserTools_Slurm.sh
 
-The Slurm-enabled version, **PatricBrowserTools_Slurm.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. 
+The Slurm-enabled version, **BV-BRC-BrowserTools_Slurm.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. 
 
 The created script will be placed in the temporary repository, "temp" and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments.
 
@@ -29,10 +29,10 @@ If the **`-report`** flag is included in the inputs, two CSV files will be gener
 
 Additionally, the software can disregard the data that is already retrieved. This feature is advantageous in case of errors during the process, allowing for a redo without starting the download from scratch.
 
-### PatricBrowserTools_Single_CPU.sh
+### BV-BRC-BrowserTools_Single_CPU.sh
 
-For users who prefer a single CPU approach, the **PatricBrowserTools_Single_CPU.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
-Moreover, **`-report`** works the same for PatricBrowserTools_Single_CPU; however, it does not have **`-l`** since it is single CPU and the process can be tracked directly on termial.
+For users who prefer a single CPU approach, the **BV-BRC-BrowserTools_Single_CPU.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
+Moreover, **`-report`** works the same for BV-BRC-BrowserTools_Single_CPU; however, it does not have **`-l`** since it is a single CPU and the process can be tracked directly on the terminal.
 
 
 ## Table of Contents
@@ -40,8 +40,8 @@ Moreover, **`-report`** works the same for PatricBrowserTools_Single_CPU; howeve
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-  - [PatricBrowserTools_Slurm](#PatricBrowserTools_Slurm)
-  - [PatricBrowserTools_Single_CPU](#PatricBrowserTools_Single_CPU)
+  - [BV-BRC-BrowserTools_Slurm](#BV-BRC-BrowserTools_Slurm)
+  - [BV-BRC-BrowserTools_Single_CPU](#BV-BRC-BrowserTools_Single_CPU)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -50,7 +50,7 @@ Moreover, **`-report`** works the same for PatricBrowserTools_Single_CPU; howeve
 
 ## Getting Started 
 ```
-git clone https://github.com/M-Serajian/PatricBrowserTools.git
+git clone https://github.com/M-Serajian/BV-BRC-BrowserTools.git
 ```
 ### Prerequisites
 There are no prerequisites needed!
@@ -110,12 +110,12 @@ sh BV-BRC-BrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME
 ```bash
 sh BV-BRC-BrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt
 ```
-Here, PatricBrowserTools will initiate a Slurm job array, in the "temp" directory, specifying the allocation of 2 CPUs as the default configuration. The job's objective is to retrieve genomic data from a list specified in the "Genome_IDs.txt" file. The computational workload is parallelized, with the first CPU tasked to download the initial portion of genomic data, while the second CPU concurrently retrieves the remaining half of the data. 
+Here, BV-BRC-BrowserTools will initiate a Slurm job array, in the "temp" directory, specifying the allocation of 2 CPUs as the default configuration. The job's objective is to retrieve genomic data from a list specified in the "Genome_IDs.txt" file. The computational workload is parallelized, with the first CPU tasked to download the initial portion of genomic data, while the second CPU concurrently retrieves the remaining half of the data. 
 
 ```bash
-sh PatricBrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt  -c 90 -m 8 -l -report
+sh BV-BRC-BrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt  -c 90 -m 8 -l -report
 ```
-In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieval task, and log files are stored in the "log" directory within the "temp" directory. 2 CSV files will be created in the main directory of PatricBrowserTools to report the downloaded genomes and the ones that failed. 
+In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieval task, and log files are stored in the "log" directory within the "temp" directory. 2 CSV files will be created in the main directory of BV-BRC-BrowserTools to report the downloaded genomes and the ones that failed. 
 
 
 
@@ -165,7 +165,7 @@ The primary information required to retrieve data from BV-BRC consists of genome
 
 ## Contributing
 
-Interested contributors are encouraged to follow the guidelines outlined in [CONTRIBUTING.md](https://github.com/M-Serajian/PatricBrowserTools/blob/main/CONTRIBUTING.md) when participating in the development of this tool.
+Interested contributors are encouraged to follow the guidelines outlined in [CONTRIBUTING.md](https://github.com/M-Serajian/BV-BRC-BrowserTools/blob/main/CONTRIBUTING.md) when participating in the development of this tool.
 
 ## License
 This project is licensed under the GPL-3.0 license - see the [LICENSE](LICENSE) file for details.

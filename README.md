@@ -58,11 +58,11 @@ There are no prerequisites needed!
 No installation is not needed! It can be cloned, and it is ready to be used. 
 
 ## Usage
-### PatricBrowserTools_Slurm Usage
+### BV-BRC-BrowserTools_Slurm Usage
 
 
 ```bash
-sh PatricBrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
+sh BV-BRC-BrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
 ```
 ### Required arguments:
 
@@ -108,7 +108,7 @@ sh PatricBrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_
 ### Examples
 
 ```bash
-sh PatricBrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt
+sh BV-BRC-BrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt
 ```
 Here, PatricBrowserTools will initiate a Slurm job array, in the "temp" directory, specifying the allocation of 2 CPUs as the default configuration. The job's objective is to retrieve genomic data from a list specified in the "Genome_IDs.txt" file. The computational workload is parallelized, with the first CPU tasked to download the initial portion of genomic data, while the second CPU concurrently retrieves the remaining half of the data. 
 
@@ -119,10 +119,10 @@ In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieva
 
 
 
-### PatricBrowserTools_Single_CPU Usage
+### BV-BRC-BrowserTools_Single_CPU Usage
 
 ```bash
-sh PatricBrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
+sh BV-BRC-BrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
 ```
 
 ### Required arguments:

@@ -1,20 +1,15 @@
 # BV-BRC-BrowserTools
 
-<div style="display: flex; align-items: center;">
-  <div style="flex: 1;">
-    <img src="https://github.com/M-Serajian/BV-BRC-BrowserTools/blob/main/images/logo_patric_white_space.png" alt="MTB++ Image" style="width: 100%;">
-  </div>
-</div>
+## Introduction
+The **BV-BRC-BrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the BV-BRC database. The primary advantage of BV-BRC-BrowserTools is  its ability to seamlessly resume processing at any point within the workflow. In the event of an interruption, the tool, when rerun without alterations to the genome list—provided they remain valid according to [BV-BRC](https://www.bv-brc.org/)— picks up precisely where it left off. Furthermore, the tool streamlines data processing efficiency by generating a comprehensive CSV report. The suite includes two main tools: **BV-BRC-BrowserTools_Slurm.sh** and **BV-BRC-BrowserTools_Single_CPU.sh**.
 
 ## How to Cite
 
 If you use the you used this tool in your study, please cite our paper:
 
 - M.Serajian et al. "Title of Your Paper." Journal Name, 2024.
-  - [Link to Your Paper](link-to-your-paper)
+  - [Link to The Paper](link-to-the-paper)
 
-## Introduction
-The **BV-BRC-BrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the BV-BRC database. The primary advantage of BV-BRC-BrowserTools is  its ability to seamlessly resume processing at any point within the workflow. In the event of an interruption, the tool, when rerun without alterations to the genome list—provided they remain valid according to [BV-BRC](https://www.bv-brc.org/)— picks up precisely where it left off. Furthermore, the tool streamlines data processing efficiency by generating a comprehensive CSV report. The suite includes two main tools: **BV-BRC-BrowserTools_Slurm.sh** and **BV-BRC-BrowserTools_Single_CPU.sh**.
 
 ### BV-BRC-BrowserTools_Slurm.sh
 

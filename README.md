@@ -1,166 +1,185 @@
 # BV-BRC-BrowserTools
 
 ## Introduction
-The **BV-BRC-BrowserTools** is a suite of powerful Bash scripts designed to facilitate the retrieval of genomic data from the BV-BRC database. The primary advantage of BV-BRC-BrowserTools is  its ability to seamlessly resume processing at any point within the workflow. In the event of an interruption, the tool, when rerun without alterations to the genome list—provided they remain valid according to [BV-BRC](https://www.bv-brc.org/)— picks up precisely where it left off. Furthermore, the tool streamlines data processing efficiency by generating a comprehensive CSV report. The suite includes two main tools: **BV-BRC-BrowserTools_Slurm.sh** and **BV-BRC-BrowserTools_Single_CPU.sh**.
+
+**BV-BRC-BrowserTools** retrieves genomic data files from the
+[BV-BRC](https://www.bv-brc.org/) FTP server. The tool is portable: the same
+command runs on a laptop and on an HPC cluster — the underlying scheduler is
+auto-detected, and the workload is parallelized accordingly. Re-running the
+same command resumes where it left off; previously-downloaded files are
+skipped, so interrupted runs do not need to start over. An optional
+`--report` flag produces CSVs of successful and failed downloads.
+
+The tool is implemented as a single, dependency-free Python 3 script
+([bv_brc_browser_tools.py](bv_brc_browser_tools.py)). The original Bash
+implementation is preserved under [old/](old/) for reference.
 
 ## How to Cite
 
-If you use the you used this tool in your study, please cite our paper:
+If you used this tool in your study, please cite:
 
-- M.Serajian et al. "Title of Your Paper." Journal Name, 2024.
-  - [Link to The Paper](link-to-the-paper)
-
-
-### BV-BRC-BrowserTools_Slurm.sh
-
-The Slurm-enabled version, **BV-BRC-BrowserTools_Slurm.sh**, generates Bash scripts compatible with Slurm, enabling the parallelization of the data retrieval process. This is achieved by dynamically adjusting the number of CPUs utilized, thereby significantly enhancing the efficiency of genomic data retrieval. 
-
-The created script will be placed in the temporary repository, "temp" and submitted based on the default CPU, memory, and time_limit values. These default values can be modified using the corresponding command-line arguments.
-
-If the **`-l`** flag is included in the inputs, log files will be stored in the "temp" directory, providing a quick way to monitor the process. 
-
-If the **`-report`** flag is included in the inputs, two CSV files will be generated. One CSV file will contain the list of successfully downloaded genomes, and the other will list the genomes that failed to download.
-
-
-Additionally, the software can disregard the data that is already retrieved. This feature is advantageous in case of errors during the process, allowing for a redo without starting the download from scratch.
-
-### BV-BRC-BrowserTools_Single_CPU.sh
-
-For users who prefer a single CPU approach, the **BV-BRC-BrowserTools_Single_CPU.sh** version is available. This version simplifies the data retrieval process by utilizing a single CPU, providing a straightforward and efficient solution for users with specific computational requirements.
-Moreover, **`-report`** works the same for BV-BRC-BrowserTools_Single_CPU; however, it does not have **`-l`** since it is a single CPU and the process can be tracked directly on the terminal.
-
+- M. Serajian et al. *"A comparative study of antibiotic resistance patterns in Mycobacterium tuberculosis."* Scientific Reports, 2025.
+  - [Link to the paper](https://www.nature.com/articles/s41598-025-89087-w)
 
 ## Table of Contents
+
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-  - [BV-BRC-BrowserTools_Slurm](#BV-BRC-BrowserTools_Slurm)
-  - [BV-BRC-BrowserTools_Single_CPU](#BV-BRC-BrowserTools_Single_CPU)
+  - [Required arguments](#required-arguments)
+  - [Optional arguments](#optional-arguments)
+  - [Valid file types](#valid-file-types)
+- [Quick test](#quick-test)
+- [Examples](#examples)
+- [How it works](#how-it-works)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
 
+## Getting Started
 
-## Getting Started 
-```
+```bash
 git clone https://github.com/M-Serajian/BV-BRC-BrowserTools.git
+cd BV-BRC-BrowserTools
+chmod +x bv_brc_browser_tools.py
 ```
+
 ### Prerequisites
-[Wget](https://www.gnu.org/software/wget/)
+
+- Python 3.8+ (standard library only — no `pip install` needed)
+- [`wget`](https://www.gnu.org/software/wget/) on `PATH` (recommended; the BV-BRC
+  FTP endpoint requires FTPS, which Python's `urllib` does not implement). The
+  script falls back to `urllib` over HTTPS when `wget` is unavailable.
+
 ### Installation
-No installation is not needed! It can be cloned, and it is ready to be used. 
+
+No installation step is required. Clone the repo and run the script directly.
 
 ## Usage
-### BV-BRC-BrowserTools_Slurm Usage
-
 
 ```bash
-sh BV-BRC-BrowserTools_Slurm.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
+./bv_brc_browser_tools.py -o GENOMES_DIR -i GENOME_IDS.txt -f FILE_TYPE [options]
 ```
-### Required arguments:
 
-- **`-o`, `--genomes_directory` GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
+### Required arguments
 
-- **`-i`, `--Address_to_genome_id_text_file` FILE**: Specify the text file containing genome IDs
+| Flag | Description |
+| ---- | ----------- |
+| `-o`, `--output`, `--genomes_saving_directory` | Directory where downloaded files are saved. |
+| `-i`, `--input`, `--Address_to_genome_id_text_file` | Text file with one BV-BRC genome ID per line. |
+| `-f`, `--File_type` | File type to retrieve (see below). |
 
-- **`-f`, `--File_type` FILE_TYPE**: Specify the file type
+### Optional arguments
 
-### Valid FILE_TYPE options:
+| Flag | Default | Description |
+| ---- | ------- | ----------- |
+| `-c`, `--cpus` | `2` | Parallel workers. On a cluster: number of array tasks. Locally: number of concurrent download threads. |
+| `-m`, `--memory` | `10` | Memory per task in GB. Cluster only. |
+| `-t`, `--time_limit` | `20` | Wall time per task in hours. Cluster only. |
+| `-l`, `--logs` | off | Write per-task logs into `./temp/logs_*`. Cluster only. |
+| `--report` | off | Write `Downloaded_genomes.csv` and `Failed_genomes.csv` at the end. Locking is used so concurrent tasks can append safely. |
+| `--scheduler {auto,slurm,pbs,lsf,sge,local}` | `auto` | Backend selection. `auto` probes the environment. |
+| `--local` | off | Force local mode even when a scheduler is detected. |
+| `--mail-user EMAIL` | `$USER_EMAIL` | Email for cluster job notifications. |
+| `--retries N` | `2` | Per-genome download retries on failure. |
+| `--timeout SECONDS` | `120` | Per-download timeout. |
+| `--temp-dir DIR` | `./temp` | Where submit scripts and task logs are written. |
+| `-h`, `--help` | — | Display help. |
 
-- **fna**: FASTA contig sequences
+> **Compatibility:** `-report` (single dash, as in the original Bash tool) is
+> still accepted.
 
-- **faa**: FASTA protein sequence file
+### Valid file types
 
-- **features.tab**: All genomic features and related information in tab-delimited format
+| Type | Description |
+| ---- | ----------- |
+| `fna` | FASTA contig sequences |
+| `faa` | FASTA protein sequence file |
+| `features.tab` | All genomic features and related information (tab-delimited) |
+| `ffn` | FASTA nucleotide sequences for genomic features (genes, RNAs, etc.) |
+| `frn` | FASTA nucleotide sequences for RNAs |
+| `gff` | Genome annotations (GFF) |
+| `pathway.tab` | Metabolic pathway assignments (tab-delimited) |
+| `spgene.tab` | Specialty gene assignments (AMR, virulence, essential genes, etc.) |
+| `subsystem.tab` | Subsystem assignments (tab-delimited) |
 
-- **ffn**: FASTA nucleotide sequences for genomic features (genes, RNAs, etc.)
+## Quick test
 
-- **frn**: FASTA nucleotide sequences for RNAs
-
-- **gff**: Genome annotations in GFF file format
-
-- **pathway.tab**: Metabolic pathway assignments in tab-delimited format
-
-- **spgene.tab**: Specialty gene assignments (AMR genes, virulence factors, essential genes, etc.) in tab-delimited format
-
-- **subsystem.tab**: Subsystem assignments in tab-delimited format
-
-### Optional arguments:
-- **`-m`, `--memory` VALUE**: Set the memory limit (default: 10)
-
-- **`-c`, `--cpus` VALUE**: Set the number of CPUs (default: 2)
-
-- **`-t`, `--time_limit` VALUE**: Set the time limit in hours (default: 20)
-
-- **`-l`, `--logs`**: Enable debugging logs
-
-- **`-report`, `--report`**: Create CSV files of downloaded and failed to be downloaded genomes
-
-- **`-h`, `--help`**: Display this help message
-
-### Examples
+A sample list of *Mycobacterium tuberculosis* genome IDs is included under
+[data/mtb_genome_ids.txt](data/mtb_genome_ids.txt). Use it to verify your
+setup before running on a full dataset:
 
 ```bash
-sh BV-BRC-BrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt
+# Download FASTA assemblies for 8 M. tuberculosis genomes (local, 4 threads)
+./bv_brc_browser_tools.py \
+    -f fna \
+    -i data/mtb_genome_ids.txt \
+    -o test_output/ \
+    -c 4 \
+    --report
 ```
-Here, BV-BRC-BrowserTools will initiate a Slurm job array, in the "temp" directory, specifying the allocation of 2 CPUs as the default configuration. The job's objective is to retrieve genomic data from a list specified in the "Genome_IDs.txt" file. The computational workload is parallelized, with the first CPU tasked to download the initial portion of genomic data, while the second CPU concurrently retrieves the remaining half of the data. 
+
+Expected output: a `test_output/` directory containing one `.fna` file per
+genome ID, plus `Downloaded_genomes.csv` and `Failed_genomes.csv` in the
+project root.
+
+The genome IDs in `data/mtb_genome_ids.txt` correspond to publicly available
+*M. tuberculosis* assemblies deposited in
+[BV-BRC](https://www.bv-brc.org/). These genomes were used in the
+comparative study of antibiotic resistance patterns cited above.
+
+## Examples
 
 ```bash
-sh BV-BRC-BrowserTools_Slurm.sh -f fna -o genomes_DIR -i Genome_IDs.txt  -c 90 -m 8 -l -report
+# Local: 8 concurrent download threads, with a CSV report.
+./bv_brc_browser_tools.py -f fna -o genomes/ -i Genome_IDs.txt -c 8 --report
 ```
-In this setup, 90 CPUs with 8GB of memory each are allocated for a data retrieval task, and log files are stored in the "log" directory within the "temp" directory. 2 CSV files will be created in the main directory of BV-BRC-BrowserTools to report the downloaded genomes and the ones that failed. 
-
-
-
-### BV-BRC-BrowserTools_Single_CPU Usage
 
 ```bash
-sh BV-BRC-BrowserTools_Single_CPU.sh -o GENOMES_SAVING_DIRECTORY -i ADDRESS_TO_GENOME_ID_TEXT_FILE -f FILE_TYPE [options]
+# Cluster: auto-detected (Slurm/PBS/LSF/SGE). 90 array tasks, 8 GB each, logs on.
+./bv_brc_browser_tools.py -f fna -o genomes/ -i Genome_IDs.txt \
+    -c 90 -m 8 -t 20 -l --report
 ```
 
-### Required arguments:
+```bash
+# Force local mode even if a scheduler is on PATH (useful on login nodes
+# for small batches):
+./bv_brc_browser_tools.py -f fna -o genomes/ -i Genome_IDs.txt -c 4 --local
+```
 
-- **`-o`, `--genomes_directory` GENOME_DIRECTORY**: Specify the directory for store downloaded genomes
+## How it works
 
-- **`-i`, `--Address_to_genome_id_text_file` FILE**: Specify the text file containing genome IDs
-
-- **`-f`, `--File_type FILE_TYPE`**: Specify the file type
-
-### Valid FILE_TYPE options:
-
-- **fna**: FASTA contig sequences
-
-- **faa**: FASTA protein sequence file
-
-- **features.tab**: All genomic features and related information in tab-delimited format
-
-- **ffn**: FASTA nucleotide sequences for genomic features (genes, RNAs, etc.)
-
-- **frn**: FASTA nucleotide sequences for RNAs
-
-- **gff**: Genome annotations in GFF file format
-
-- **pathway.tab**: Metabolic pathway assignments in tab-delimited format
-
-- **spgene.tab**: Specialty gene assignments (AMR genes, virulence factors, essential genes, etc.) in tab-delimited format
-
-- **subsystem.tab**: Subsystem assignments in tab-delimited format
-
-### Optional arguments:
-- **`-report`, `--report`**: Create CSV files of downloaded and failed to be downloaded genomes
-
-- **`-h`, `--help`**: Display this help message
+1. **Input sanitation.** The genome ID list is loaded; blank/whitespace-only
+   lines are removed in place.
+2. **Backend selection.** The script probes for `sbatch` (Slurm), `bsub`
+   (LSF), or `qsub` (PBS/SGE, disambiguated via `SGE_ROOT`/`pbsnodes`/etc.).
+   With no scheduler — or with `--local` — the work runs in-process via a
+   `ThreadPoolExecutor` sized to `--cpus`.
+3. **Cluster mode.** The script writes a submit script under `--temp-dir`
+   tailored to the detected scheduler and submits an array job of `--cpus`
+   tasks. Each task re-invokes the same script with `--worker --chunk-id N
+   --total-chunks K` and processes its slice of the genome list serially.
+4. **Resume.** Each task skips genomes whose target file already exists and
+   is non-empty. Re-running the same command picks up only the remaining
+   genomes.
+5. **Reports (optional).** When `--report` is set, `Downloaded_genomes.csv`
+   and `Failed_genomes.csv` are created in the project root and appended to
+   under an `fcntl` exclusive lock so concurrent tasks do not interleave.
 
 ## Configuration
-The primary information required to retrieve data from BV-BRC consists of genome IDs associated with various BACTERIAL AND VIRAL metadata, available at [BV-BRC](https://www.bv-brc.org/). Extract the desired genome IDs and store them in a text file. This software is not sensitive to white vertical spaces between two consecutive genome IDs; it automatically removes such spaces from the text file and saves the cleaned information in the same file containing genome IDs. Subsequently, the tool initiates the download process.
 
-
+The primary input is a list of BV-BRC genome IDs corresponding to bacterial
+or viral metadata, available at [BV-BRC](https://www.bv-brc.org/). Extract
+the desired genome IDs and store them, one per line, in a plain text file.
+Blank lines are tolerated — the script removes them and rewrites the file in
+place before downloading.
 
 ## Contributing
 
-Interested contributors are encouraged to follow the guidelines outlined in [CONTRIBUTING.md](https://github.com/M-Serajian/BV-BRC-BrowserTools/blob/main/CONTRIBUTING.md) when participating in the development of this tool.
+Contributions are welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
-This project is licensed under the GPL-3.0 license - see the [LICENSE](LICENSE) file for details.
+
+This project is licensed under the GPL-3.0 license — see [LICENSE](LICENSE).
